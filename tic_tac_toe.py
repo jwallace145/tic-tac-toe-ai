@@ -84,10 +84,11 @@ def minimax(board_state, depth, is_max):
                 if board_state[i][j] == -1:
                     board_state[i][j] = 1
 
-                    best = max(best, minimax(board_state, depth + 1, not is_max))
+                    best = max(best, minimax(board_state, depth + 1, not is_max) - depth)
 
                     board_state[i][j] = -1
         return best
+
     elif not is_max:
         best = 1000
 
@@ -96,7 +97,7 @@ def minimax(board_state, depth, is_max):
                 if board_state[i][j] == -1:
                     board_state[i][j] = 0
 
-                    best = min(best, minimax(board_state, depth + 1, not is_max))
+                    best = min(best, minimax(board_state, depth + 1, not is_max) + depth)
 
                     board_state[i][j] = -1
         
@@ -141,15 +142,21 @@ def x_turn(board_state):
     board_state[row][column] = 1
 
 def main():
+    print('tic tac toe artificial intelligence\n')
     print_board(board_state)
     
-    while (evaluate_board_state(board_state) == 0):
+    while evaluate_board_state(board_state) == 0 and moves_left(board_state) == True:
         x_turn(board_state)
         print_board(board_state)
         o_turn(board_state)
         print_board(board_state)
+
+    if (evaluate_board_state(board_state) == 10):
+        print('player tic tac toe!')
+    elif (evaluate_board_state(board_state) == -10):
+        print('ai opponent tic tac toe!')
+    else:
+        print('draw')
     
-
-
 if __name__ == "__main__":
     main()
