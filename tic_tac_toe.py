@@ -66,7 +66,9 @@ def moves_left(board_state):
             
     return False
 
-def minimax(board_state, depth, is_max):
+
+# minimax algorithm with alpha beta pruning
+def minimax(board_state, depth, is_max, alpha, beta):
     score = evaluate_board_state(board_state)
     
     if score == 10:
@@ -84,9 +86,13 @@ def minimax(board_state, depth, is_max):
                 if board_state[i][j] == -1:
                     board_state[i][j] = 1
 
-                    best = max(best, minimax(board_state, depth + 1, not is_max) - depth)
+                    best = max(best, minimax(board_state, depth + 1, not is_max, alpha, beta) - depth)
 
                     board_state[i][j] = -1
+
+                    alpha = max(alpha, best)
+                    if beta <= alpha:
+                        break
         return best
 
     elif not is_max:
@@ -97,10 +103,13 @@ def minimax(board_state, depth, is_max):
                 if board_state[i][j] == -1:
                     board_state[i][j] = 0
 
-                    best = min(best, minimax(board_state, depth + 1, not is_max) + depth)
+                    best = min(best, minimax(board_state, depth + 1, not is_max, alpha, beta) + depth)
 
                     board_state[i][j] = -1
-        
+
+                    beta = min(beta, best)
+                    if beta <= alpha:
+                        break
         return best
 
 def findOpponentBestMove(board_state):
@@ -113,7 +122,7 @@ def findOpponentBestMove(board_state):
             if (board_state[i][j] == -1):
                 board_state[i][j] = 0
 
-                move = minimax(board_state, 0, True)
+                move = minimax(board_state, 0, True, -10000, 10000)
 
                 board_state[i][j] = -1
 
